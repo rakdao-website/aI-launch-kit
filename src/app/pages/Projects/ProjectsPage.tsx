@@ -1,7 +1,8 @@
+import { useState } from "react";
 import { ScaledPage } from "@/app/components/common/ScaledPage";
 import { Spinner } from "@/app/components/common/Spinner";
 import { TopHeader } from "@/app/components/common/TopHeader";
-import { ProjectSummaryView } from "@/app/launchkit-api";
+import { launchKitApi, ProjectSummaryView } from "@/app/launchkit-api";
 
 function formatProjectUpdatedAt(value: string): string {
   const date = new Date(value);
@@ -31,6 +32,24 @@ export function ProjectsPage({
   onRefresh: () => Promise<void>;
   onSignOut: () => void;
 }) {
+  const [previewBusyId, setPreviewBusyId] = useState<string | null>(null);
+
+  const openFreshPreview = async (item: ProjectSummaryView) => {
+    if (!item.latestBuildId) {
+      if (item.previewUrl) window.open(item.previewUrl, "_blank", "noopener,noreferrer");
+      return;
+    }
+    setPreviewBusyId(item.id);
+    try {
+      const { url } = await launchKitApi.getBuildPreviewUrl(item.latestBuildId);
+      window.open(url, "_blank", "noopener,noreferrer");
+    } catch {
+      if (item.previewUrl) window.open(item.previewUrl, "_blank", "noopener,noreferrer");
+    } finally {
+      setPreviewBusyId(null);
+    }
+  };
+
   return (
     <ScaledPage scrollable header={<TopHeader onSignOut={onSignOut} />}>
       <div
@@ -110,18 +129,19 @@ export function ProjectsPage({
                       </div>
                     </div>
                     <div className="flex flex-wrap gap-[8px] shrink-0">
-                      {item.previewUrl && (
+                      {(item.previewUrl || item.latestBuildId) && item.latestBuildStatus === "completed" && (
                         <button
                           type="button"
-                          onClick={() => window.open(item.previewUrl!, "_blank", "noopener,noreferrer")}
-                          className="font-semibold text-[12px] px-[12px] py-[8px] rounded-[8px]"
+                          onClick={() => { void openFreshPreview(item); }}
+                          disabled={previewBusyId === item.id}
+                          className="font-semibold text-[12px] px-[12px] py-[8px] rounded-[8px] disabled:opacity-50"
                           style={{
                             background: "rgba(111,204,221,0.12)",
                             color: "#6fccdd",
                             border: "1px solid rgba(111,204,221,0.25)",
                           }}
                         >
-                          Preview
+                          {previewBusyId === item.id ? "Opening…" : "Preview"}
                         </button>
                       )}
                       <button

@@ -44,8 +44,9 @@ export function AiSummaryModal({
               AI Summary
             </h2>
             <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 13, lineHeight: 1.5, maxWidth: 520 }}>
-              Here&apos;s what we extracted from your uploaded files. Review and edit anything before
-              applying it to your form.
+              Review the highlights below. Saving also applies the full extracted brief
+              (products, contact, hours, testimonials, and more) so website generation
+              can use those details — not only these five fields.
             </p>
           </div>
           <button

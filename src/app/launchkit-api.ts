@@ -71,6 +71,23 @@ export type BusinessDraft = {
   targetAudience: string;
   notes: string;
   categoryId: string;
+  /** Rich grounding fields (from PDF / AI Summary apply). */
+  businessActivity?: string;
+  activityCode?: string;
+  description?: string;
+  purpose?: string;
+  competitors?: string;
+  products?: string;
+  locationHours?: string;
+  serviceArea?: string;
+  contact?: string;
+  socials?: string;
+  tone?: string;
+  aesthetic?: string;
+  stats?: string;
+  testimonials?: string;
+  teamBios?: string;
+  certifications?: string;
 };
 export type DesignDraft = {
   tagline: string;

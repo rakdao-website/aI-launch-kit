@@ -371,20 +371,47 @@ export function useProjectSession() {
   const applySummary = (summary: AiSummaryDraft) => perform(async () => {
     const current = await ensureProject();
     const extracted = current.extractedProfileFields ?? {};
-    const notesParts = [summary.services, summary.brandTone].map((part) => part.trim()).filter(Boolean);
+    const overview = summary.companyOverview.trim();
+    const services = summary.services.trim();
+    const tone = summary.brandTone.trim();
+
+    // Persist the full extract into business so mockups / v0 briefs get products,
+    // contact, hours, testimonials, etc. — not only the five summary fields.
+    const business: Record<string, string> = {
+      companyName:
+        pickExtracted(extracted.companyName, current.business.companyName) ||
+        current.business.companyName,
+      industry:
+        pickExtracted(extracted.industry, current.business.industry) ||
+        current.business.industry,
+      targetAudience:
+        summary.targetAudience.trim() ||
+        pickExtracted(extracted.targetAudience, current.business.targetAudience),
+      uvp: overview || pickExtracted(extracted.uvp, current.business.uvp),
+      description: pickExtracted(extracted.description, overview),
+      businessActivity: pickExtracted(extracted.businessActivity),
+      activityCode: pickExtracted(extracted.activityCode),
+      purpose: pickExtracted(extracted.purpose),
+      competitors: pickExtracted(extracted.competitors),
+      products: services || pickExtracted(extracted.products, extracted.businessActivity),
+      locationHours: pickExtracted(extracted.locationHours),
+      serviceArea: pickExtracted(extracted.serviceArea),
+      contact: pickExtracted(extracted.contact),
+      socials: pickExtracted(extracted.socials),
+      tone: tone || pickExtracted(extracted.tone),
+      aesthetic: pickExtracted(extracted.aesthetic),
+      stats: pickExtracted(extracted.stats),
+      testimonials: pickExtracted(extracted.testimonials),
+      teamBios: pickExtracted(extracted.teamBios),
+      certifications: pickExtracted(extracted.certifications),
+      notes: pickExtracted(extracted.notes, current.business.notes),
+    };
+    const compactBusiness = Object.fromEntries(
+      Object.entries(business).filter(([, value]) => value.trim().length > 0),
+    );
+
     const updated = await launchKitApi.patchProject(current.id, {
-      business: {
-        companyName:
-          pickExtracted(extracted.companyName, current.business.companyName) ||
-          current.business.companyName,
-        industry:
-          pickExtracted(extracted.industry, current.business.industry) ||
-          current.business.industry,
-        targetAudience:
-          summary.targetAudience.trim() || current.business.targetAudience,
-        uvp: summary.companyOverview.trim() || current.business.uvp,
-        notes: notesParts.join("\n\n") || current.business.notes,
-      },
+      business: compactBusiness,
       design: {
         tagline:
           pickExtracted(extracted.tagline, current.design.tagline) ||
