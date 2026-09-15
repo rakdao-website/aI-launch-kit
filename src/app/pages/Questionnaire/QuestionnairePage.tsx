@@ -38,6 +38,7 @@ export function QuestionnairePage({
   onStepClick,
   completedUpTo,
   busy,
+  error = null,
 }: {
   project: ProjectView;
   onSave: (form: QuestionnaireValues) => Promise<void>;
@@ -50,6 +51,7 @@ export function QuestionnairePage({
   onStepClick?: (step: number) => void;
   completedUpTo?: number;
   busy: boolean;
+  error?: string | null;
 }) {
   const [logoDrag, setLogoDrag] = useState(false);
   const [docDrag, setDocDrag] = useState(false);
@@ -186,6 +188,14 @@ export function QuestionnairePage({
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [summaryOpen, busy, project.updatedAt]);
+
+  // Provider failures leave an empty modal that looks like a bad PDF — close it and surface the real error.
+  useEffect(() => {
+    if (!summaryOpen || busy || !error) return;
+    setSummaryOpen(false);
+    setSummaryDraft(null);
+    setSummaryError(error);
+  }, [summaryOpen, busy, error]);
 
   const fields: Array<{ key: keyof QuestionnaireValues; label: string; placeholder: string }> = [
     { key: "companyName", label: "Company / Brand Name", placeholder: "e.g. Innovation City" },

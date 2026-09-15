@@ -99,6 +99,7 @@ export default function App() {
           onApplySummary={applySummary}
           onRunAiSummary={runAiSummary}
           busy={busy}
+          error={error}
           onBack={goBack}
           onStepClick={goToStep}
           completedUpTo={completedSteps}
