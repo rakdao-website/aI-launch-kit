@@ -20,17 +20,12 @@ export const loginSchema = z.object({
     .trim()
     .min(1, "Enter your email address.")
     .email("Enter a valid email address.")
-    .max(254)
-    .refine(
-      (email) => email.toLowerCase() === "test@innovationcity.com",
-      "Use the enabled staging email address.",
-    ),
+    .max(254),
 });
 
 export const otpSchema = z.object({
   code: z.string()
-    .regex(/^\d{6}$/, "Enter the complete 6-digit code.")
-    .refine((code: string): boolean => code === "123456", "Enter the staging access code."),
+    .regex(/^\d{6}$/, "Enter the complete 6-digit code."),
 });
 
 export const questionnaireSchema = z.object({

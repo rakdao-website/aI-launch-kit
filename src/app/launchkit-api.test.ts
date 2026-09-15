@@ -86,14 +86,14 @@ describe("Launch Kit API authentication", () => {
 
     const session = await launchKitApi.verifyAccessCode(
       "test@innovationcity.com",
-      "123456",
+      "847291",
     );
 
     const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit];
     expect(url).toMatch(/\/api\/v1\/auth\/verify$/);
     expect(JSON.parse(String(init.body))).toEqual({
       email: "test@innovationcity.com",
-      code: "123456",
+      code: "847291",
     });
     expect(session.accessToken).toBe("signed-token");
   });
