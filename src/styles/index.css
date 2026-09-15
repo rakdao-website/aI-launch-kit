@@ -29,6 +29,23 @@ body {
 
 * {
   box-sizing: border-box;
+  /* Thin teal scrollbar (matches SubNav NEXT #6fccdd), flush with the viewport edge. */
+  scrollbar-width: thin;
+  scrollbar-color: #6fccdd transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: #6fccdd;
+  border-radius: 999px;
 }
 
 /* Drives the shared <Spinner>. Defined here rather than injected by a component,

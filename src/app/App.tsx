@@ -73,47 +73,107 @@ export default function App() {
   }
 
   return (
-    <div style={{ minHeight: "100vh", width: "100%", background: "#0b0b0b", display: "flex", justifyContent: "center", alignItems: "stretch" }}>
-      {/* Wizard screens are centred at the 1440px design width. The auth screen is
-          full-bleed by design — its showcase panel runs to the right edge — so it
-          opts out of the cap rather than sitting in letterbox bars on wide displays. */}
-      <div style={{ width: "100%", maxWidth: isAuthPage ? "none" : 1440, minHeight: "100vh", margin: "0 auto", display: "flex", flexDirection: "column" }}>
-        {page === "login" && <LoginPage onNext={signIn} busy={busy} />}
-        <ErrorToast message={error} onDismiss={() => setError(null)} />
-        {page === "projects" && (
-          <ProjectsPage
-            projects={projects}
-            loading={projectsLoading || booting}
-            busy={busy}
-            onCreate={createWebsite}
-            onOpen={openProject}
-            onRefresh={refreshProjects}
-            onSignOut={signOut}
-          />
-        )}
-        {page === "questionnaire" && project && (
-          <QuestionnairePage
-            project={project}
-            onSave={saveBusiness}
-            onUploadLogo={uploadLogo}
-            onUploadDocuments={uploadDocuments}
-            onRemoveAsset={removeAsset}
-            onApplySummary={applySummary}
-            onRunAiSummary={runAiSummary}
-            busy={busy}
-            onBack={goBack}
-            onStepClick={goToStep}
-            completedUpTo={completedSteps}
-          />
-        )}
-        {page === "category-mood" && project && catalog && <CategoryMoodPage project={project} catalog={catalog} onSave={saveDesign} busy={busy} onBack={goBack} onStepClick={goToStep} completedUpTo={completedSteps} />}
-        {page === "colors" && project && catalog && <ColorsFontsPage project={project} catalog={catalog} onSave={saveColors} busy={busy} onBack={goBack} onStepClick={goToStep} completedUpTo={completedSteps} />}
-        {page === "pick-pages" && project && catalog && <PickPagesPage project={project} catalog={catalog} onGenerate={generateMockups} busy={busy} onBack={goBack} onStepClick={goToStep} completedUpTo={completedSteps} />}
-        {page === "generating" && <GeneratingPage operation={operation} error={error} onRetry={() => project && void generateMockups(project.pageLayout)} />}
-        {page === "preview" && project && <PreviewPage mockups={mockups} selectedMockupId={project.selectedMockupId} onConfirm={startBuild} busy={busy} onBack={() => go("pick-pages")} />}
-        {page === "building" && <BuildingPage build={build} error={error} onBack={() => go("preview")} onProjects={() => { void returnToProjects(); }} />}
-        {page === "download" && build?.status === "completed" && <DownloadPage build={build} deployment={deployment} onDeploy={deploy} busy={busy} onBack={() => { void returnToProjects(); }} />}
-      </div>
+    <div style={{ minHeight: "100vh", width: "100%", background: "#0b0b0b" }}>
+      {/* Login is full-bleed. Wizard pages use ScaledPage for the 1440 content cap so
+          the page scrollbar stays on the viewport edge instead of the centered column. */}
+      {page === "login" && <LoginPage onNext={signIn} busy={busy} />}
+      <ErrorToast message={error} onDismiss={() => setError(null)} />
+      {page === "projects" && (
+        <ProjectsPage
+          projects={projects}
+          loading={projectsLoading || booting}
+          busy={busy}
+          onCreate={createWebsite}
+          onOpen={openProject}
+          onRefresh={refreshProjects}
+          onSignOut={signOut}
+        />
+      )}
+      {page === "questionnaire" && project && (
+        <QuestionnairePage
+          project={project}
+          onSave={saveBusiness}
+          onUploadLogo={uploadLogo}
+          onUploadDocuments={uploadDocuments}
+          onRemoveAsset={removeAsset}
+          onApplySummary={applySummary}
+          onRunAiSummary={runAiSummary}
+          busy={busy}
+          onBack={goBack}
+          onStepClick={goToStep}
+          completedUpTo={completedSteps}
+        />
+      )}
+      {page === "category-mood" && project && catalog && (
+        <CategoryMoodPage
+          project={project}
+          catalog={catalog}
+          onSave={saveDesign}
+          busy={busy}
+          onBack={goBack}
+          onStepClick={goToStep}
+          completedUpTo={completedSteps}
+        />
+      )}
+      {page === "colors" && project && catalog && (
+        <ColorsFontsPage
+          project={project}
+          catalog={catalog}
+          onSave={saveColors}
+          busy={busy}
+          onBack={goBack}
+          onStepClick={goToStep}
+          completedUpTo={completedSteps}
+        />
+      )}
+      {page === "pick-pages" && project && catalog && (
+        <PickPagesPage
+          project={project}
+          catalog={catalog}
+          onGenerate={generateMockups}
+          busy={busy}
+          onBack={goBack}
+          onStepClick={goToStep}
+          completedUpTo={completedSteps}
+        />
+      )}
+      {page === "generating" && (
+        <GeneratingPage
+          operation={operation}
+          error={error}
+          onRetry={() => project && void generateMockups(project.pageLayout)}
+        />
+      )}
+      {page === "preview" && project && (
+        <PreviewPage
+          mockups={mockups}
+          selectedMockupId={project.selectedMockupId}
+          onConfirm={startBuild}
+          busy={busy}
+          onBack={() => go("pick-pages")}
+        />
+      )}
+      {page === "building" && (
+        <BuildingPage
+          build={build}
+          error={error}
+          onBack={() => go("preview")}
+          onProjects={() => {
+            void returnToProjects();
+          }}
+        />
+      )}
+      {page === "download" && build?.status === "completed" && (
+        <DownloadPage
+          build={build}
+          deployment={deployment}
+          onDeploy={deploy}
+          busy={busy}
+          onBack={() => {
+            void returnToProjects();
+          }}
+        />
+      )}
     </div>
   );
 }

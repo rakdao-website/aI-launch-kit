@@ -5,8 +5,8 @@ const DESIGN_WIDTH = 1280;
 const DESIGN_HEIGHT = 900;
 
 /**
- * Renders generated mockup HTML at desktop size, then scales it to fit the card
- * so nav/hero layouts are not crushed into overlapping text.
+ * Renders generated mockup HTML at desktop size, then scales it to cover the card
+ * so the preview fills the frame (no empty white band below the site).
  */
 export function ScaledMockupPreview({
   html,
@@ -24,7 +24,10 @@ export function ScaledMockupPreview({
 
     const update = () => {
       const width = node.clientWidth;
-      if (width > 0) setScale(width / DESIGN_WIDTH);
+      const height = node.clientHeight;
+      if (width <= 0 || height <= 0) return;
+      // Cover the card: fill both axes and crop overflow instead of leaving a gap.
+      setScale(Math.max(width / DESIGN_WIDTH, height / DESIGN_HEIGHT));
     };
 
     update();
@@ -37,7 +40,7 @@ export function ScaledMockupPreview({
     <div
       ref={frameRef}
       className="absolute inset-0 overflow-hidden"
-      style={{ background: "white", zIndex: 2 }}
+      style={{ background: "#111", zIndex: 2 }}
       aria-hidden={false}
     >
       <iframe
@@ -51,7 +54,7 @@ export function ScaledMockupPreview({
           height: DESIGN_HEIGHT,
           transform: `scale(${scale})`,
           transformOrigin: "top left",
-          background: "white",
+          background: "#111",
         }}
       />
     </div>
