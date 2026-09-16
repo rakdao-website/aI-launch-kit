@@ -40,12 +40,11 @@ describe("DownloadPage", () => {
     expect(screen.getByText("Your website is ready!")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Download" })).toBeEnabled();
     expect(screen.getByRole("button", { name: /Open Vercel Claim/i })).toBeInTheDocument();
+    // vusercontent demos are not iframe-embedded (framed hosts often 404); offer open instead.
     await waitFor(() => {
-      expect(screen.getByTitle("Generated website preview")).toHaveAttribute(
-        "src",
-        "https://demo-fresh.vusercontent.net/",
-      );
+      expect(screen.getByRole("button", { name: /Open preview/i })).toBeInTheDocument();
     });
+    expect(screen.queryByTitle("Generated website preview")).not.toBeInTheDocument();
   });
 
   it("disables download when the build has no archive", () => {
