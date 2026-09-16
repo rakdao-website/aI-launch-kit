@@ -12,7 +12,7 @@ import { designSelectionSchema, DesignSelectionValues } from "@/app/wizard-valid
 import { CategoryPickerModal } from "./components/CategoryPickerModal";
 import { MoodPickerModal } from "./components/MoodPickerModal";
 
-export function CategoryMoodPage({ project, catalog, onSave, onBack, onStepClick, completedUpTo, busy }: {
+export function CategoryMoodPage({ project, catalog, onSave, onBack, onStepClick, completedUpTo, busy, onSignOut, onHome }: {
   project: ProjectView;
   catalog: WizardCatalog;
   onSave: (categoryId: string, moodId: string, animationId: string) => Promise<void>;
@@ -20,6 +20,8 @@ export function CategoryMoodPage({ project, catalog, onSave, onBack, onStepClick
   onStepClick?: (step: number) => void;
   completedUpTo?: number;
   busy: boolean;
+  onSignOut?: () => void;
+  onHome?: () => void;
 }) {
   const categories = catalog.businessCategories;
   const moods = catalog.designMoods;
@@ -66,7 +68,7 @@ export function CategoryMoodPage({ project, catalog, onSave, onBack, onStepClick
   return (
     <ScaledPage
       scrollable
-      header={<><TopHeader /><SubNav activeStep={1} completedUpTo={completedUpTo} onBack={onBack} onNext={busy ? undefined : continueDesign} onStepClick={onStepClick} /></>}
+      header={<><TopHeader onSignOut={onSignOut} onLogoClick={onHome} /><SubNav activeStep={1} completedUpTo={completedUpTo} onBack={onBack} onNext={busy ? undefined : continueDesign} onStepClick={onStepClick} /></>}
     >
       <div
         className="w-full min-h-full flex flex-col"

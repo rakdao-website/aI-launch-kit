@@ -87,6 +87,9 @@ export default function App() {
           onOpen={openProject}
           onRefresh={refreshProjects}
           onSignOut={signOut}
+          onHome={() => {
+            void returnToProjects();
+          }}
         />
       )}
       {page === "questionnaire" && project && (
@@ -103,6 +106,10 @@ export default function App() {
           onBack={goBack}
           onStepClick={goToStep}
           completedUpTo={completedSteps}
+          onSignOut={signOut}
+          onHome={() => {
+            void returnToProjects();
+          }}
         />
       )}
       {page === "category-mood" && project && catalog && (
@@ -114,6 +121,10 @@ export default function App() {
           onBack={goBack}
           onStepClick={goToStep}
           completedUpTo={completedSteps}
+          onSignOut={signOut}
+          onHome={() => {
+            void returnToProjects();
+          }}
         />
       )}
       {page === "colors" && project && catalog && (
@@ -125,6 +136,10 @@ export default function App() {
           onBack={goBack}
           onStepClick={goToStep}
           completedUpTo={completedSteps}
+          onSignOut={signOut}
+          onHome={() => {
+            void returnToProjects();
+          }}
         />
       )}
       {page === "pick-pages" && project && catalog && (
@@ -136,6 +151,10 @@ export default function App() {
           onBack={goBack}
           onStepClick={goToStep}
           completedUpTo={completedSteps}
+          onSignOut={signOut}
+          onHome={() => {
+            void returnToProjects();
+          }}
         />
       )}
       {page === "generating" && (
@@ -143,6 +162,10 @@ export default function App() {
           operation={operation}
           error={error}
           onRetry={() => project && void generateMockups(project.pageLayout)}
+          onSignOut={signOut}
+          onHome={() => {
+            void returnToProjects();
+          }}
         />
       )}
       {page === "preview" && project && (
@@ -152,6 +175,10 @@ export default function App() {
           onConfirm={startBuild}
           busy={busy}
           onBack={() => go("pick-pages")}
+          onSignOut={signOut}
+          onHome={() => {
+            void returnToProjects();
+          }}
         />
       )}
       {page === "building" && (
@@ -162,6 +189,7 @@ export default function App() {
           onProjects={() => {
             void returnToProjects();
           }}
+          onSignOut={signOut}
         />
       )}
       {page === "download" && build?.status === "completed" && (
@@ -171,6 +199,10 @@ export default function App() {
           onDeploy={deploy}
           busy={busy}
           onBack={() => {
+            void returnToProjects();
+          }}
+          onSignOut={signOut}
+          onHome={() => {
             void returnToProjects();
           }}
         />

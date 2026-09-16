@@ -23,7 +23,7 @@ import {
 } from "./page-layout";
 import { SectionRow } from "./SectionRow";
 
-export function PickPagesPage({ project, catalog, onGenerate, onBack, onStepClick, completedUpTo, busy }: {
+export function PickPagesPage({ project, catalog, onGenerate, onBack, onStepClick, completedUpTo, busy, onSignOut, onHome }: {
   project: ProjectView;
   catalog: WizardCatalog;
   onGenerate: (layout: PageLayout) => Promise<void>;
@@ -31,6 +31,8 @@ export function PickPagesPage({ project, catalog, onGenerate, onBack, onStepClic
   onStepClick?: (step: number) => void;
   completedUpTo?: number;
   busy: boolean;
+  onSignOut?: () => void;
+  onHome?: () => void;
 }) {
   const [pages, setPages] = useState<PageTemplate[]>(() => editorPages(project, catalog));
   const [openMenu, setOpenMenu] = useState<{ pageId: string; sectionId: string } | null>(null);
@@ -79,7 +81,7 @@ export function PickPagesPage({ project, catalog, onGenerate, onBack, onStepClic
       scrollable
       header={
         <>
-          <TopHeader />
+          <TopHeader onSignOut={onSignOut} onLogoClick={onHome} />
           <SubNav
             activeStep={3}
             completedUpTo={completedUpTo}

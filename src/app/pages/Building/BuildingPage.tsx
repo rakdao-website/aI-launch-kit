@@ -3,15 +3,16 @@ import { Spinner } from "@/app/components/common/Spinner";
 import { TopHeader } from "@/app/components/common/TopHeader";
 import { BuildView } from "@/app/launchkit-api";
 
-export function BuildingPage({ build, error, onBack, onProjects }: {
+export function BuildingPage({ build, error, onBack, onProjects, onSignOut }: {
   build: BuildView | null;
   error: string | null;
   onBack: () => void;
   onProjects: () => void;
+  onSignOut?: () => void;
 }) {
   const terminalError = build && ["failed", "cancelled", "timed_out"].includes(build.status);
   return (
-    <ScaledPage header={<TopHeader />}>
+    <ScaledPage header={<TopHeader onSignOut={onSignOut} onLogoClick={onProjects} />}>
       <div className="w-full flex flex-col flex-1" style={{ background: "#0b0b0b", fontFamily: "'Montserrat', sans-serif" }}>
         <div className="flex-1 flex flex-col items-center justify-center gap-[28px] px-4 text-center">
           {!terminalError && !error && (

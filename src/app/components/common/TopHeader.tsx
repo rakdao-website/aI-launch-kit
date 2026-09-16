@@ -25,9 +25,11 @@ const linkStyle: CSSProperties = {
 export function TopHeader({
   initials = "AA",
   onSignOut,
+  onLogoClick,
 }: {
   initials?: string;
   onSignOut?: () => void;
+  onLogoClick?: () => void;
 } = {}) {
   const [profileOpen, setProfileOpen] = useState(false);
   const menuId = useId();
@@ -71,7 +73,25 @@ export function TopHeader({
       }}
     >
       <div style={{ display: "flex", alignItems: "center" }}>
-        <LogoSvg />
+        {onLogoClick ? (
+          <button
+            type="button"
+            onClick={onLogoClick}
+            aria-label="Go to dashboard"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              background: "transparent",
+              border: "none",
+              padding: 0,
+              cursor: "pointer",
+            }}
+          >
+            <LogoSvg />
+          </button>
+        ) : (
+          <LogoSvg />
+        )}
       </div>
 
       <div

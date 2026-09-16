@@ -13,12 +13,16 @@ export function DownloadPage({
   onDeploy: _onDeploy,
   onBack: _onBack,
   busy,
+  onSignOut,
+  onHome,
 }: {
   build: BuildView;
   deployment: DeploymentView | null;
   onDeploy: () => Promise<void>;
   onBack: () => void;
   busy: boolean;
+  onSignOut?: () => void;
+  onHome?: () => void;
 }) {
   const [downloading, setDownloading] = useState(false);
   const [downloadError, setDownloadError] = useState<string | null>(null);
@@ -61,7 +65,7 @@ export function DownloadPage({
   };
 
   return (
-    <ScaledPage scrollable header={<TopHeader />}>
+    <ScaledPage scrollable header={<TopHeader onSignOut={onSignOut} onLogoClick={onHome} />}>
       <div
         className="w-full min-h-full flex flex-col"
         style={{ background: "#0b0b0b", fontFamily: "'Montserrat', sans-serif" }}
