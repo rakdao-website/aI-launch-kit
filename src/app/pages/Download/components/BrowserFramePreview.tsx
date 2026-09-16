@@ -6,8 +6,9 @@ import { LaunchKitApiError, launchKitApi, normalizePreviewUrl } from "@/app/laun
 /**
  * Fake browser chrome around the generated site.
  *
- * v0 demo hosts rotate; token query params often 404 in iframes. Always refresh
- * through the API before embedding or opening, then use the bare demo host.
+ * Refresh through the API before opening. Embed only Vercel live URLs —
+ * vusercontent demos often render a Next 404 shell inside iframes even when
+ * the same URL works in a new tab, so those open via the preview button.
  */
 export function BrowserFramePreview({
   buildId,
@@ -162,12 +163,9 @@ function pickEmbedUrl(
     if (!normalized || !isHttpsUrl(normalized) || isV0ChatUrl(normalized)) continue;
     try {
       const host = new URL(normalized).hostname.toLowerCase();
-      if (
-        host.endsWith(".vercel.app") ||
-        host === "vercel.app" ||
-        host.endsWith(".vusercontent.net") ||
-        host === "vusercontent.net"
-      ) {
+      // Only embed claimed/live Vercel hosts. vusercontent demos frequently
+      // serve a framed 404 shell even when top-level navigation works.
+      if (host.endsWith(".vercel.app") || host === "vercel.app") {
         return normalized;
       }
     } catch {
