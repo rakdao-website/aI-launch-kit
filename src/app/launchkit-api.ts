@@ -4,6 +4,22 @@ export const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL ?? "http://localh
 const API_ROOT = `${API_BASE_URL}/api/v1`;
 const AUTH_TOKEN_KEY = "ailk_accessToken";
 
+/** v0 token query params often 404 in browsers/iframes; bare demo hosts are stable. */
+export function normalizePreviewUrl(value: string | null | undefined): string | null {
+  if (!value) return null;
+  try {
+    const url = new URL(value);
+    if (url.protocol !== "https:") return null;
+    const host = url.hostname.toLowerCase();
+    if (host === "vusercontent.net" || host.endsWith(".vusercontent.net")) {
+      return `${url.protocol}//${url.host}/`;
+    }
+    return value;
+  } catch {
+    return null;
+  }
+}
+
 export type AuthTokenView = {
   accessToken: string;
   tokenType: "bearer";
@@ -449,7 +465,7 @@ export const launchKitApi = {
         "preview_url_missing",
       );
     }
-    return preview.url;
+    return normalizePreviewUrl(preview.url) ?? preview.url;
   },
   downloadBuild: async (downloadPath: string): Promise<void> => {
     const url = absoluteApiUrl(downloadPath);

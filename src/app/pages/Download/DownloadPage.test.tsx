@@ -23,9 +23,7 @@ vi.mock("@/app/launchkit-api", async () => {
 describe("DownloadPage", () => {
   beforeEach(() => {
     getBuildPreviewUrl.mockReset();
-    getBuildPreviewUrl.mockResolvedValue(
-      "https://demo-fresh.vusercontent.net/?__v0_token=abc",
-    );
+    getBuildPreviewUrl.mockResolvedValue("https://demo-fresh.vusercontent.net/");
   });
 
   it("renders the success state with download and a deferred deploy action", async () => {
@@ -45,7 +43,7 @@ describe("DownloadPage", () => {
     await waitFor(() => {
       expect(screen.getByTitle("Generated website preview")).toHaveAttribute(
         "src",
-        "https://demo-fresh.vusercontent.net/?__v0_token=abc",
+        "https://demo-fresh.vusercontent.net/",
       );
     });
   });

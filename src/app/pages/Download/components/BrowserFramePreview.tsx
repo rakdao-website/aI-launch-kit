@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
 import { ExternalLink, RotateCw } from "lucide-react";
 
-import { LaunchKitApiError, launchKitApi } from "@/app/launchkit-api";
+import { LaunchKitApiError, launchKitApi, normalizePreviewUrl } from "@/app/launchkit-api";
 
 /**
  * Fake browser chrome around the generated site.
  *
- * v0 demo hosts rotate and require a short-lived `__v0_token`. Always refresh
- * through the API before embedding or opening. Prefer a Vercel live URL when
- * present; otherwise embed a fresh vusercontent demo URL.
+ * v0 demo hosts rotate; token query params often 404 in iframes. Always refresh
+ * through the API before embedding or opening, then use the bare demo host.
  */
 export function BrowserFramePreview({
   buildId,
@@ -148,7 +147,8 @@ export function BrowserFramePreview({
 
 function pickOpenUrl(...candidates: Array<string | null | undefined>): string | null {
   for (const value of candidates) {
-    if (value && isHttpsUrl(value) && !isV0ChatUrl(value)) return value;
+    const normalized = normalizePreviewUrl(value);
+    if (normalized && isHttpsUrl(normalized) && !isV0ChatUrl(normalized)) return normalized;
   }
   return null;
 }
@@ -158,16 +158,17 @@ function pickEmbedUrl(
   previewUrl: string | null | undefined,
 ): string | null {
   for (const value of [liveUrl, previewUrl]) {
-    if (!value || !isHttpsUrl(value) || isV0ChatUrl(value)) continue;
+    const normalized = normalizePreviewUrl(value);
+    if (!normalized || !isHttpsUrl(normalized) || isV0ChatUrl(normalized)) continue;
     try {
-      const host = new URL(value).hostname.toLowerCase();
+      const host = new URL(normalized).hostname.toLowerCase();
       if (
         host.endsWith(".vercel.app") ||
         host === "vercel.app" ||
         host.endsWith(".vusercontent.net") ||
         host === "vusercontent.net"
       ) {
-        return value;
+        return normalized;
       }
     } catch {
       continue;

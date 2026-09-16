@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ScaledPage } from "@/app/components/common/ScaledPage";
 import { Spinner } from "@/app/components/common/Spinner";
 import { TopHeader } from "@/app/components/common/TopHeader";
-import { launchKitApi, ProjectSummaryView } from "@/app/launchkit-api";
+import { launchKitApi, normalizePreviewUrl, ProjectSummaryView } from "@/app/launchkit-api";
 
 function formatProjectUpdatedAt(value: string): string {
   const date = new Date(value);
@@ -36,15 +36,17 @@ export function ProjectsPage({
 
   const openFreshPreview = async (item: ProjectSummaryView) => {
     if (!item.latestBuildId) {
-      if (item.previewUrl) window.open(item.previewUrl, "_blank", "noopener,noreferrer");
+      const url = normalizePreviewUrl(item.previewUrl);
+      if (url) window.open(url, "_blank", "noopener,noreferrer");
       return;
     }
     setPreviewBusyId(item.id);
     try {
-      const { url } = await launchKitApi.getBuildPreviewUrl(item.latestBuildId);
+      const url = await launchKitApi.getBuildPreviewUrl(item.latestBuildId);
       window.open(url, "_blank", "noopener,noreferrer");
     } catch {
-      if (item.previewUrl) window.open(item.previewUrl, "_blank", "noopener,noreferrer");
+      const url = normalizePreviewUrl(item.previewUrl);
+      if (url) window.open(url, "_blank", "noopener,noreferrer");
     } finally {
       setPreviewBusyId(null);
     }
