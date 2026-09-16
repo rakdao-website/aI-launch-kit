@@ -23,6 +23,7 @@ export function ProjectsPage({
   onOpen,
   onRefresh,
   onSignOut,
+  onHome,
 }: {
   projects: ProjectSummaryView[];
   loading: boolean;
@@ -31,6 +32,7 @@ export function ProjectsPage({
   onOpen: (projectId: string) => Promise<void>;
   onRefresh: () => Promise<void>;
   onSignOut: () => void;
+  onHome?: () => void;
 }) {
   const [previewBusyId, setPreviewBusyId] = useState<string | null>(null);
 
@@ -53,7 +55,7 @@ export function ProjectsPage({
   };
 
   return (
-    <ScaledPage scrollable header={<TopHeader onSignOut={onSignOut} />}>
+    <ScaledPage scrollable header={<TopHeader onSignOut={onSignOut} onLogoClick={onHome} />}>
       <div
         className="w-full min-h-full flex flex-col"
         style={{ background: "#0b0b0b", fontFamily: "'Montserrat', sans-serif" }}

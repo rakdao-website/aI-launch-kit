@@ -13,7 +13,7 @@ import { CustomPaletteModal } from "./CustomPaletteModal";
 import { FontCard } from "./FontCard";
 import { FontPair, PaletteEntry } from "./types";
 
-export function ColorsFontsPage({ project, catalog, onSave, onBack, onStepClick, completedUpTo, busy }: {
+export function ColorsFontsPage({ project, catalog, onSave, onBack, onStepClick, completedUpTo, busy, onSignOut, onHome }: {
   project: ProjectView;
   catalog: WizardCatalog;
   onSave: (paletteId: string, customPalette: CustomPaletteValues | null, fontId: string, customFonts: { heading: string; body: string } | null) => Promise<void>;
@@ -21,6 +21,8 @@ export function ColorsFontsPage({ project, catalog, onSave, onBack, onStepClick,
   onStepClick?: (step: number) => void;
   completedUpTo?: number;
   busy: boolean;
+  onSignOut?: () => void;
+  onHome?: () => void;
 }) {
   const palettes: PaletteEntry[] = catalog.palettes
     .filter((item) => item.colors)
@@ -85,7 +87,7 @@ export function ColorsFontsPage({ project, catalog, onSave, onBack, onStepClick,
   return (
     <ScaledPage
       scrollable
-      header={<><TopHeader /><SubNav activeStep={2} completedUpTo={completedUpTo} onBack={onBack} onNext={busy ? undefined : continueColors} onStepClick={onStepClick} /></>}
+      header={<><TopHeader onSignOut={onSignOut} onLogoClick={onHome} /><SubNav activeStep={2} completedUpTo={completedUpTo} onBack={onBack} onNext={busy ? undefined : continueColors} onStepClick={onStepClick} /></>}
     >
       <div
         className="w-full min-h-full flex flex-col"

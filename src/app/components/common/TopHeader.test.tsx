@@ -30,4 +30,13 @@ describe("TopHeader", () => {
     expect(onSignOut).toHaveBeenCalledOnce();
     expect(screen.queryByRole("button", { name: "Log out" })).not.toBeInTheDocument();
   });
+
+  it("calls onLogoClick when the logo is clicked", () => {
+    const onLogoClick = vi.fn();
+    render(<TopHeader onLogoClick={onLogoClick} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Go to dashboard" }));
+
+    expect(onLogoClick).toHaveBeenCalledOnce();
+  });
 });

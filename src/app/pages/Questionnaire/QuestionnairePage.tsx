@@ -39,6 +39,8 @@ export function QuestionnairePage({
   completedUpTo,
   busy,
   error = null,
+  onSignOut,
+  onHome,
 }: {
   project: ProjectView;
   onSave: (form: QuestionnaireValues) => Promise<void>;
@@ -52,6 +54,8 @@ export function QuestionnairePage({
   completedUpTo?: number;
   busy: boolean;
   error?: string | null;
+  onSignOut?: () => void;
+  onHome?: () => void;
 }) {
   const [logoDrag, setLogoDrag] = useState(false);
   const [docDrag, setDocDrag] = useState(false);
@@ -209,7 +213,7 @@ export function QuestionnairePage({
       scrollable
       header={
         <>
-          <TopHeader />
+          <TopHeader onSignOut={onSignOut} onLogoClick={onHome} />
           <SubNav
             activeStep={0}
             completedUpTo={completedUpTo}

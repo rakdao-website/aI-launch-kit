@@ -3,17 +3,19 @@ import { Spinner } from "@/app/components/common/Spinner";
 import { TopHeader } from "@/app/components/common/TopHeader";
 import { OperationView } from "@/app/launchkit-api";
 
-export function GeneratingPage({ operation, error, onRetry }: {
+export function GeneratingPage({ operation, error, onRetry, onSignOut, onHome }: {
   operation: OperationView | null;
   error: string | null;
   onRetry: () => void;
+  onSignOut?: () => void;
+  onHome?: () => void;
 }) {
   const message = operation?.status === "running"
     ? "Creating three design directions..."
     : "Preparing your persisted project...";
 
   return (
-    <ScaledPage header={<TopHeader />}>
+    <ScaledPage header={<TopHeader onSignOut={onSignOut} onLogoClick={onHome} />}>
       <div
         className="w-full flex flex-col flex-1"
         style={{ background: "#0b0b0b", fontFamily: "'Montserrat', sans-serif", minHeight: "100%" }}

@@ -10,12 +10,14 @@ import { launchKitApi, MockupView } from "@/app/launchkit-api";
 import { mockupSelectionSchema, MockupSelectionValues } from "@/app/wizard-validation";
 import { ScaledMockupPreview } from "./ScaledMockupPreview";
 
-export function PreviewPage({ mockups, selectedMockupId, onConfirm, onBack, busy }: {
+export function PreviewPage({ mockups, selectedMockupId, onConfirm, onBack, busy, onSignOut, onHome }: {
   mockups: MockupView[];
   selectedMockupId: string | null;
   onConfirm: (mockupId: string) => Promise<void>;
   onBack: () => void;
   busy: boolean;
+  onSignOut?: () => void;
+  onHome?: () => void;
 }) {
   const [selected, setSelected] = useState(
     selectedMockupId ?? mockups[0]?.id ?? "",
@@ -61,7 +63,7 @@ export function PreviewPage({ mockups, selectedMockupId, onConfirm, onBack, busy
       scrollable
       header={
         <>
-          <TopHeader />
+          <TopHeader onSignOut={onSignOut} onLogoClick={onHome} />
           {/* Completed steps bar — full-bleed border, stepper content stays centered with its own padding */}
           <div
             className="w-full flex flex-wrap items-center justify-center gap-x-[clamp(8px,2vw,16px)] gap-y-2 px-[clamp(12px,4vw,32px)] py-2"
